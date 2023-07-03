@@ -1,6 +1,9 @@
 // Overview class selector
 const overview = document.querySelector(".overview");
 
+// Repo list class selector
+const repoList = document.querySelector(".repo-list")
+
 // Github username
 const username = "Tony2450";
 
@@ -34,4 +37,23 @@ const displayInfo = function (userJsonData) {
       <p><strong>Number of public repos:</strong> ${publicRepoCount}</p>
     </div> `;
     overview.append(userInfoDiv);
+    userRepoListFetch();
 };
+
+// Async fetch function to call github API for list of repos
+const userRepoListFetch = async function () {
+    const repoListData = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+    const repoListJson = await repoListData.json();
+    console.log(repoListJson);
+    displayRepos(repoListJson);
+};
+
+// Display fetched repo list
+const displayRepos = function(repoListJson) {
+    repoListJson.forEach(function(repo,index,array){
+        let listDiv = document.createElement("li");
+        listDiv.classList.add("repo");
+        listDiv.innerHTML = `<h3>${repo.name}</h3>`
+        repoList.append(listDiv);
+    })
+}
